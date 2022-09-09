@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Z80 Simulator</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+</head>
+
+<body>
+    <h1>Z80 Simulator</h1>
+    <div class="container">
+        <div class="column">
+            <h2>Mini Z80 Assembly Manual</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Mnemônico</th>
+                        <th>SZHPNC</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Notas</th>
+                    </tr>
+                    <tr>
+                        <td>ADC A,s </td>
+                        <td class="flags">***V0*</td>
+                        <td>Aritmética</td>
+                        <td>Add with Carry </td>
+                        <td>A=A+s+CY</td>
+                    </tr>
+                    <tr>
+                        <td>ADC HL,ss </td>
+                        <td class="flags">**?V0*</td>
+                        <td>Aritmética</td>
+                        <td>Add with Carry </td>
+                        <td>HL=HL+ss+CY </td>
+                    </tr>
+                    <tr>
+                        <td>ADD A,s </td>
+                        <td class="flags">***V0*</td>
+                        <td>Aritmética</td>
+                        <td>Add</td>
+                        <td>A=A+s </td>
+                    </tr>
+                    <tr>
+                        <td>ADD HL,ss </td>
+                        <td class="flags">--?-0*</td>
+                        <td>Aritmética</td>
+                        <td>Add</td>
+                        <td>HL=HL+ss</td>
+                    </tr>
+                    <tr>
+                        <td>ADD IX,pp </td>
+                        <td class="flags">--?-0*</td>
+                        <td>Aritmética</td>
+                        <td>Add</td>
+                        <td>IX=IX+pp</td>
+                    </tr>
+                    <tr>
+                        <td>ADD IY,rr </td>
+                        <td class="flags">--?-0*</td>
+                        <td>Aritmética</td>
+                        <td>Add</td>
+                        <td>IY=IY+rr</td>
+                    </tr>
+                    <tr>
+                        <td>AND s </td>
+                        <td class="flags">***P00</td>
+                        <td>Lógica</td>
+                        <td>Logical AND</td>
+                        <td>A=A&amp;s </td>
+                    </tr>
+                    <tr>
+                        <td>BIT b,m </td>
+                        <td class="flags">?*1?0-</td>
+                        <td>Lógica</td>
+                        <td>Test Bit </td>
+                        <td>m&amp;{2^b} </td>
+                    </tr>
+                    <tr>
+                        <td>CALL cc,nn</td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Conditional Call </td>
+                        <td>If cc CALL</td>
+                    </tr>
+                    <tr>
+                        <td>CALL nn </td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Unconditional Call </td>
+                        <td>-[SP]=PC,PC=nn</td>
+                    </tr>
+                    <tr>
+                        <td>CCF </td>
+                        <td class="flags">--?-0*</td>
+                        <td>Lógica</td>
+                        <td>Complement Carry Flag</td>
+                        <td>CY=~CY</td>
+                    </tr>
+                    <tr>
+                        <td>CP s</td>
+                        <td class="flags">***V1*</td>
+                        <td>Lógica</td>
+                        <td>Compare</td>
+                        <td>A-s </td>
+                    </tr>
+                    <tr>
+                        <td>CPD </td>
+                        <td class="flags">****1-</td>
+                        <td>Lógica</td>
+                        <td>Compare and Decrement</td>
+                        <td>A-[HL],HL=HL-1,BC=BC-1</td>
+                    </tr>
+                    <tr>
+                        <td>CPDR</td>
+                        <td class="flags">****1-</td>
+                        <td>Lógica</td>
+                        <td>Compare, Dec., Repeat</td>
+                        <td>CPD till A=[HL]or BC=0</td>
+                    </tr>
+                    <tr>
+                        <td>CPI </td>
+                        <td class="flags">****1-</td>
+                        <td>Lógica</td>
+                        <td>Compare and Increment</td>
+                        <td>A-[HL],HL=HL+1,BC=BC-1</td>
+                    </tr>
+                    <tr>
+                        <td>CPIR</td>
+                        <td class="flags">****1-</td>
+                        <td>Lógica</td>
+                        <td>Compare, Inc., Repeat</td>
+                        <td>CPI till A=[HL]or BC=0</td>
+                    </tr>
+                    <tr>
+                        <td>CPL </td>
+                        <td class="flags">--1-1-</td>
+                        <td>Lógica</td>
+                        <td>Complement </td>
+                        <td>A=~A</td>
+                    </tr>
+                    <tr>
+                        <td>DAA </td>
+                        <td class="flags">***P-*</td>
+                        <td>Aritmética</td>
+                        <td>Decimal Adjust Acc.</td>
+                        <td>A=BCD format</td>
+                    </tr>
+                    <tr>
+                        <td>DEC s </td>
+                        <td class="flags">***V1-</td>
+                        <td>Aritmética</td>
+                        <td>Decrement</td>
+                        <td>s=s-1 </td>
+                    </tr>
+                    <tr>
+                        <td>DEC xx</td>
+                        <td class="flags">------</td>
+                        <td>Aritmética</td>
+                        <td>Decrement</td>
+                        <td>xx=xx-1 </td>
+                    </tr>
+                    <tr>
+                        <td>DEC ss</td>
+                        <td class="flags">------</td>
+                        <td>Aritmética</td>
+                        <td>Decrement</td>
+                        <td>ss=ss-1 </td>
+                    </tr>
+                    <tr>
+                        <td>DI</td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Disable Interrupts </td>
+                        <td>&nbsp; </td>
+                    </tr>
+                    <tr>
+                        <td>DJNZ e</td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Dec., Jump Non-Zero</td>
+                        <td>B=B-1 till B=0</td>
+                    </tr>
+                    <tr>
+                        <td>EI</td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Enable Interrupts</td>
+                        <td>&nbsp; </td>
+                    </tr>
+                    <tr>
+                        <td>EX [SP],HL</td>
+                        <td class="flags">------</td>
+                        <td>Transferência de dados</td>
+                        <td>Exchange </td>
+                        <td>[SP]&lt;-&gt;HL </td>
+                    </tr>
+                    <tr>
+                        <td>EX [SP],xx</td>
+                        <td class="flags">------</td>
+                        <td>Transferência de dados</td>
+                        <td>Exchange </td>
+                        <td>[SP]&lt;-&gt;xx </td>
+                    </tr>
+                    <tr>
+                        <td>EX AF,AF' </td>
+                        <td class="flags">------</td>
+                        <td>Transferência de dados</td>
+                        <td>Exchange </td>
+                        <td>AF&lt;-&gt;AF'</td>
+                    </tr>
+                    <tr>
+                        <td>EX DE,HL</td>
+                        <td class="flags">------</td>
+                        <td>Transferência de dados</td>
+                        <td>Exchange </td>
+                        <td>DE&lt;-&gt;HL </td>
+                    </tr>
+                    <tr>
+                        <td>EXX </td>
+                        <td class="flags">------</td>
+                        <td>Transferência de dados</td>
+                        <td>Exchange </td>
+                        <td>qq&lt;-&gt;qq' (except AF)</td>
+                    </tr>
+                    <tr>
+                        <td>HALT</td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Halt </td>
+                        <td>&nbsp; </td>
+                    </tr>
+                    <tr>
+                        <td>IM n</td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Interrupt Mode </td>
+                        <td> (n=0,1,2)</td>
+                    </tr>
+                    <tr>
+                        <td>IN A,[n]</td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Input</td>
+                        <td>A=[n] </td>
+                    </tr>
+                    <tr>
+                        <td>IN r,[C]</td>
+                        <td class="flags">***P0-</td>
+                        <td>Pilha e outros</td>
+                        <td>Input</td>
+                        <td>r=[C] </td>
+                    </tr>
+                    <tr>
+                        <td>INC r </td>
+                        <td class="flags">***V0-</td>
+                        <td>Aritmética</td>
+                        <td>Increment</td>
+                        <td>r=r+1 </td>
+                    </tr>
+                    <tr>
+                        <td>INC [HL]</td>
+                        <td class="flags">***V0-</td>
+                        <td>Aritmética</td>
+                        <td>Increment</td>
+                        <td>[HL]=[HL]+1 </td>
+                    </tr>
+                    <tr>
+                        <td>INC xx</td>
+                        <td class="flags">------</td>
+                        <td>Aritmética</td>
+                        <td>Increment</td>
+                        <td>xx=xx+1 </td>
+                    </tr>
+                    <tr>
+                        <td>INC [xx+d]</td>
+                        <td class="flags">***V0-</td>
+                        <td>Aritmética</td>
+                        <td>Increment</td>
+                        <td>[xx+d]=[xx+d]+1 </td>
+                    </tr>
+                    <tr>
+                        <td>INC ss</td>
+                        <td class="flags">------</td>
+                        <td>Aritmética</td>
+                        <td>Increment</td>
+                        <td>ss=ss+1 </td>
+                    </tr>
+                    <tr>
+                        <td>IND </td>
+                        <td class="flags">?*??1-</td>
+                        <td>Aritmética</td>
+                        <td>Input and Decrement</td>
+                        <td>[HL]=[C],HL=HL-1,B=B-1</td>
+                    </tr>
+                    <tr>
+                        <td>INDR</td>
+                        <td class="flags">?1??1-</td>
+                        <td>Aritmética</td>
+                        <td>Input, Dec., Repeat</td>
+                        <td>IND till B=0</td>
+                    </tr>
+                    <tr>
+                        <td>INI </td>
+                        <td class="flags">?*??1-</td>
+                        <td>Aritmética</td>
+                        <td>Input and Increment</td>
+                        <td>[HL]=[C],HL=HL+1,B=B-1</td>
+                    </tr>
+                    <tr>
+                        <td>INIR</td>
+                        <td class="flags">?1??1-</td>
+                        <td>Aritmética</td>
+                        <td>Input, Inc., Repeat</td>
+                        <td>INI till B=0</td>
+                    </tr>
+                    <tr>
+                        <td>JP [HL] </td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Unconditional Jump </td>
+                        <td>PC=[HL] </td>
+                    </tr>
+                    <tr>
+                        <td>JP [xx] </td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Unconditional Jump </td>
+                        <td>PC=[xx] </td>
+                    </tr>
+                    <tr>
+                        <td>JP nn </td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Unconditional Jump </td>
+                        <td>PC=nn </td>
+                    </tr>
+                    <tr>
+                        <td>JP cc,nn</td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Conditional Jump </td>
+                        <td>If cc JP</td>
+                    </tr>
+                    <tr>
+                        <td>JR e</td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Unconditional Jump </td>
+                        <td>PC=PC+e </td>
+                    </tr>
+                    <tr>
+                        <td>JR cc,e </td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Conditional Jump </td>
+                        <td>If cc JR(cc=C,NC,NZ,Z)</td>
+                    </tr>
+                    <tr>
+                        <td>LD dst,src</td>
+                        <td class="flags">------</td>
+                        <td>Transferência de dados</td>
+                        <td>Load </td>
+                        <td>dst=src </td>
+                    </tr>
+                    <tr>
+                        <td>LD A,i</td>
+                        <td class="flags">**0*0-</td>
+                        <td>Transferência de dados</td>
+                        <td>Load </td>
+                        <td>A=i(i=I,R)</td>
+                    </tr>
+                    <tr>
+                        <td>LDD </td>
+                        <td class="flags">--0*0-</td>
+                        <td>Transferência de dados</td>
+                        <td>Load and Decrement </td>
+                        <td>[DE]=[HL],HL=HL-1,# </td>
+                    </tr>
+                    <tr>
+                        <td>LDDR</td>
+                        <td class="flags">--000-</td>
+                        <td>Transferência de dados</td>
+                        <td>Load, Dec., Repeat </td>
+                        <td>LDD till BC=0 </td>
+                    </tr>
+                    <tr>
+                        <td>LDI </td>
+                        <td class="flags">--0*0-</td>
+                        <td>Transferência de dados</td>
+                        <td>Load and Increment </td>
+                        <td>[DE]=[HL],HL=HL+1,# </td>
+                    </tr>
+                    <tr>
+                        <td>LDIR</td>
+                        <td class="flags">--000-</td>
+                        <td>Transferência de dados</td>
+                        <td>Load, Inc., Repeat </td>
+                        <td>LDI till BC=0 </td>
+                    </tr>
+                    <tr>
+                        <td>NEG </td>
+                        <td class="flags">***V1*</td>
+                        <td>Lógica</td>
+                        <td>Negate </td>
+                        <td>A=-A</td>
+                    </tr>
+                    <tr>
+                        <td>NOP </td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>No Operation </td>
+                        <td>&nbsp; </td>
+                    </tr>
+                    <tr>
+                        <td>OR s</td>
+                        <td class="flags">***P00</td>
+                        <td>Lógica</td>
+                        <td>Logical inclusive OR </td>
+                        <td>A=Avs </td>
+                    </tr>
+                    <tr>
+                        <td>OTDR</td>
+                        <td class="flags">?1??1-</td>
+                        <td>Pilha e outros</td>
+                        <td>Output, Dec., Repeat </td>
+                        <td>OUTD till B=0 </td>
+                    </tr>
+                    <tr>
+                        <td>OTIR</td>
+                        <td class="flags">?1??1-</td>
+                        <td>Pilha e outros</td>
+                        <td>Output, Inc., Repeat </td>
+                        <td>OUTI till B=0 </td>
+                    </tr>
+                    <tr>
+                        <td>OUT [C],r </td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Output </td>
+                        <td>[C]=r </td>
+                    </tr>
+                    <tr>
+                        <td>OUT [n],A </td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Output </td>
+                        <td>[n]=A </td>
+                    </tr>
+                    <tr>
+                        <td>OUTD</td>
+                        <td class="flags">?*??1-</td>
+                        <td>Pilha e outros</td>
+                        <td>Output and Decrement </td>
+                        <td>[C]=[HL],HL=HL-1,B=B-1</td>
+                    </tr>
+                    <tr>
+                        <td>OUTI</td>
+                        <td class="flags">?*??1-</td>
+                        <td>Pilha e outros</td>
+                        <td>Output and Increment </td>
+                        <td>[C]=[HL],HL=HL+1,B=B-1</td>
+                    </tr>
+                    <tr>
+                        <td>POP xx</td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Pop</td>
+                        <td>xx=[SP]+</td>
+                    </tr>
+                    <tr>
+                        <td>POP qq</td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Pop</td>
+                        <td>qq=[SP]+</td>
+                    </tr>
+                    <tr>
+                        <td>PUSH xx </td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Push </td>
+                        <td>-[SP]=xx</td>
+                    </tr>
+                    <tr>
+                        <td>PUSH qq </td>
+                        <td class="flags">------</td>
+                        <td>Pilha e outros</td>
+                        <td>Push </td>
+                        <td>-[SP]=qq</td>
+                    </tr>
+                    <tr>
+                        <td>RES b,m </td>
+                        <td class="flags">------</td>
+                        <td>Lógica</td>
+                        <td>Reset bit</td>
+                        <td>m=m&amp;{~2^b}</td>
+                    </tr>
+                    <tr>
+                        <td>RET </td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Return </td>
+                        <td>PC=[SP]+</td>
+                    </tr>
+                    <tr>
+                        <td>RET cc</td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Conditional Return </td>
+                        <td>If cc RET </td>
+                    </tr>
+                    <tr>
+                        <td>RETI</td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Return from Interrupt</td>
+                        <td>PC=[SP]+</td>
+                    </tr>
+                    <tr>
+                        <td>RETN</td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Return from NMI</td>
+                        <td>PC=[SP]+</td>
+                    </tr>
+                    <tr>
+                        <td>RL m</td>
+                        <td class="flags">**0P0*</td>
+                        <td>Lógica</td>
+                        <td>Rotate Left</td>
+                        <td>m={CY,m}&lt;-</td>
+                    </tr>
+                    <tr>
+                        <td>RLA </td>
+                        <td class="flags">--0-0*</td>
+                        <td>Lógica</td>
+                        <td>Rotate Left Acc. </td>
+                        <td>A={CY,A}&lt;-</td>
+                    </tr>
+                    <tr>
+                        <td>RLC m </td>
+                        <td class="flags">**0P0*</td>
+                        <td>Lógica</td>
+                        <td>Rotate Left Circular </td>
+                        <td>m=m&lt;- </td>
+                    </tr>
+                    <tr>
+                        <td>RLCA</td>
+                        <td class="flags">--0-0*</td>
+                        <td>Lógica</td>
+                        <td>Rotate Left Circular </td>
+                        <td>A=A&lt;- </td>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>RLD </td>
+                        <td class="flags">**0P0-</td>
+                        <td>Lógica</td>
+                        <td>Rotate Left 4 bits </td>
+                        <td>{A,[HL]}={A,[HL]}&lt;- ##</td>
+                    </tr>
+                    <tr>
+                        <td>RR m</td>
+                        <td class="flags">**0P0*</td>
+                        <td>Lógica</td>
+                        <td>Rotate Right </td>
+                        <td>m=-&gt;{CY,m}</td>
+                    </tr>
+                    <tr>
+                        <td>RRA </td>
+                        <td class="flags">--0-0*</td>
+                        <td>Lógica</td>
+                        <td>Rotate Right Acc.</td>
+                        <td>A=-&gt;{CY,A}</td>
+                    </tr>
+                    <tr>
+                        <td>RRC m </td>
+                        <td class="flags">**0P0*</td>
+                        <td>Lógica</td>
+                        <td>Rotate Right Circular</td>
+                        <td>m=-&gt;m </td>
+                    </tr>
+                    <tr>
+                        <td>RRCA</td>
+                        <td class="flags">--0-0*</td>
+                        <td>Lógica</td>
+                        <td>Rotate Right Circular</td>
+                        <td>A=-&gt;A </td>
+                    </tr>
+                    <tr>
+                        <td>RRD </td>
+                        <td class="flags">**0P0-</td>
+                        <td>Lógica</td>
+                        <td>Rotate Right 4 bits</td>
+                        <td>{A,[HL]}=-&gt;{A,[HL]} ##</td>
+                    </tr>
+                    <tr>
+                        <td>RST p </td>
+                        <td class="flags">------</td>
+                        <td>Desvio</td>
+                        <td>Restart</td>
+                        <td> (p=0H,8H,10H,...,38H)</td>
+                    </tr>
+                    <tr>
+                        <td>SBC A,s </td>
+                        <td class="flags">***V1*</td>
+                        <td>Aritmética</td>
+                        <td>Subtract with Carry</td>
+                        <td>A=A-s-CY</td>
+                    </tr>
+                    <tr>
+                        <td>SBC HL,ss </td>
+                        <td class="flags">**?V1*</td>
+                        <td>Aritmética</td>
+                        <td>Subtract with Carry</td>
+                        <td>HL=HL-ss-CY </td>
+                    </tr>
+                    <tr>
+                        <td>SCF </td>
+                        <td class="flags">--0-01</td>
+                        <td>Lógica</td>
+                        <td>Set Carry Flag </td>
+                        <td>CY=1</td>
+                    </tr>
+                    <tr>
+                        <td>SET b,m </td>
+                        <td class="flags">------</td>
+                        <td>Lógica</td>
+                        <td>Set bit</td>
+                        <td>m=mv{2^b} </td>
+                    </tr>
+                    <tr>
+                        <td>SLA m </td>
+                        <td class="flags">**0P0*</td>
+                        <td>Lógica</td>
+                        <td>Shift Left Arithmetic</td>
+                        <td>m=m*2 </td>
+                    </tr>
+                    <tr>
+                        <td>SRA m </td>
+                        <td class="flags">**0P0*</td>
+                        <td>Lógica</td>
+                        <td>Shift Right Arith. </td>
+                        <td>m=m/2 </td>
+                    </tr>
+                    <tr>
+                        <td>SRL m </td>
+                        <td class="flags">**0P0*</td>
+                        <td>Lógica</td>
+                        <td>Shift Right Logical</td>
+                        <td>m=-&gt;{0,m,CY}</td>
+                    </tr>
+                    <tr>
+                        <td>SUB s </td>
+                        <td class="flags">***V1*</td>
+                        <td>Aritmética</td>
+                        <td>Subtract </td>
+                        <td>A=A-s </td>
+                    </tr>
+                    <tr>
+                        <td>XOR s </td>
+                        <td class="flags">***P00</td>
+                        <td>Lógica</td>
+                        <td>Logical Exclusive OR </td>
+                        <td>A=Axs </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="column">
+            <h2>Instructions</h2>
+            <select name="samples" id="samples" aria-placeholder="Sample programs">
+                <option value="None">None</option>
+            </select>
+            <button type="button">Load</button>
+            <br><br>
+            <textarea placeholder="Write here your assembly instructions" id="instructions"
+                style="min-width: 100%; max-width: 100%;" rows="10"></textarea>
+            <br>
+            <label for="clock">Clock Speed (sec): </label><input value="1" placeholder="Clock speed in secs." id="clock"
+                type="number" min="0.1" max="5" step="0.1">
+            <button type="button">Save</button>
+            <button type="button">Run!</button>
+        </div>
+        <div class="column">
+            <picture>
+                <source srcset="assets/z80-1.jpg">
+                <img src="assets/z80-1.jpg" alt="Z80">
+            </picture>
+        </div>
+    </div>
+    <script src='main.js'></script>
+</body>
+
+</html>
